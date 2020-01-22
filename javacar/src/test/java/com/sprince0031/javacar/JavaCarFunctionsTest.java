@@ -18,4 +18,12 @@ public class JavaCarFunctionsTest {
         assertEquals(593.75, jcEVFunc.calculateRange(), 0.01);
     }
 
+    @Test
+    public void shouldClearScreen() {
+        int i = 0;
+        // while (i < 1000) {
+            
+            
+        // }
+    }
 }
