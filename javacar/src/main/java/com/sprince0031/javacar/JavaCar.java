@@ -8,13 +8,14 @@ public class JavaCar {
 
     void run() {
         JavaCarEVFunctions jcEVFunc = new JavaCarEVFunctions();
-        JavaCarMotion jcMotion = new JavaCarMotion();
-        Thread conDispThread = new Thread(new ConsoleDisplay());
+        // JavaCarMotion jcMotion = new JavaCarMotion();
+        
         System.out.println("Current charge level: " + jcEVFunc.getChargeLevel() + " %");
         System.out.println("Estimated range: " + jcEVFunc.calculateRange() + " km");
         if (jcEVFunc.getChargeLevel() <= 20.0) {
             System.out.println("Battery level is low! Consider charging.");
         }
+        Thread conDispThread = new Thread(new ConsoleDisplay());
         conDispThread.start();
 
     }
@@ -22,7 +23,7 @@ public class JavaCar {
     public static void main(String[] args) throws IOException {
 
         String username, key;
-        int action;
+        // int action;
         JavaCarFunctions jcFuntions = new JavaCarFunctions();
         do {
             System.out.println("Hello World! Please provide credentials to unlock JavaCar.");

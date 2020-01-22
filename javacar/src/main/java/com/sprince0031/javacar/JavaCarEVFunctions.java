@@ -6,7 +6,7 @@ public class JavaCarEVFunctions implements EV {
     private double avgRangePerkWh = 6.25;
     private double maxEnergyCapacity = 95.0; // 95 kWh of battery capacity.
     // private double maxCharge = 95.0 / 400; // 400 volts
-    private double maxRange = 500.0; // 500 km of max range for P100D
+    // private double maxRange = 500.0; // 500 km of max range for P100D
     private double availableRange;
 
     @Override
