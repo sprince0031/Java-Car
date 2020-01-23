@@ -7,16 +7,13 @@ import java.io.InputStreamReader;
 public class JavaCar {
 
     void run() {
-        JavaCarEVFunctions jcEVFunc = new JavaCarEVFunctions();
-        // JavaCarMotion jcMotion = new JavaCarMotion();
         
-        System.out.println("Current charge level: " + jcEVFunc.getChargeLevel() + " %");
-        System.out.println("Estimated range: " + jcEVFunc.calculateRange() + " km");
-        if (jcEVFunc.getChargeLevel() <= 20.0) {
-            System.out.println("Battery level is low! Consider charging.");
-        }
         Thread conDispThread = new Thread(new ConsoleDisplay());
+        conDispThread.setDaemon(true);
+        Thread controlsThread = new Thread(new Controls());
+
         conDispThread.start();
+        controlsThread.start();
 
     }
 
