@@ -1,9 +1,10 @@
 package com.sprince0031.javacar;
 
 public class JavaCarMotion implements GenericCarMotion {
-    private static int currentSpeed = 0;
+    private static volatile int currentSpeed = 0;
     private double accelerationRate = 9.25; // m/s^2
     private double naturalDecelerationRate = 6.25;
+    private double brakingDecelerationRate = 12.25;
     private int topSpeed = 250; // 250 kmph
 
     public void accelerate() {
@@ -11,7 +12,7 @@ public class JavaCarMotion implements GenericCarMotion {
 
         if (currentSpeed < topSpeed) {
             currentSpeed = (int) (currentSpeed + ((accelerationRate * 125) / 1000));
-            System.out.println("Speed: " + this.getCurrentSpeed());
+            System.out.println("Speed: " + this.getCurrentSpeed() + "\tAccelerating!");
             
         } else {
             currentSpeed = topSpeed;
@@ -30,6 +31,16 @@ public class JavaCarMotion implements GenericCarMotion {
 	public void decelerate() {
         if (currentSpeed > 0) {
             currentSpeed = (int)(currentSpeed - ((naturalDecelerationRate * 125)/1000));
+        } else {
+            currentSpeed = 0;
+        }
+    }
+
+    public void brake() {
+        if (currentSpeed > 0) {
+            currentSpeed = (int)(currentSpeed - ((brakingDecelerationRate * 125)/1000));
+            System.out.println("Speed: " + this.getCurrentSpeed() + "\tBraking!");
+
         } else {
             currentSpeed = 0;
         }

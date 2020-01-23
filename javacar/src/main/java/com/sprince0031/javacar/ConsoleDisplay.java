@@ -38,6 +38,17 @@ public class ConsoleDisplay implements NativeKeyListener, Runnable {
             System.out.println(new String(new char[50]).replace("\0", "\r\n"));
             
         }
+
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_DOWN || pressEvent.getKeyCode() == NativeKeyEvent.VC_S) {
+            jcMotion.brake();
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            System.out.println(new String(new char[50]).replace("\0", "\r\n"));
+        }
         
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
             try {
