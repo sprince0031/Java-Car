@@ -1,12 +1,17 @@
 package com.sprince0031.javacar;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class JavaCarMotion implements GenericCarMotion {
     private static volatile int currentSpeed = 0;
     private static volatile String currentState = "--";
+    private static volatile double currentDistance = 0.0;
     private double accelerationRate = 9.25; // m/s^2
     private double naturalDecelerationRate = 6.25;
     private double brakingDecelerationRate = 12.25;
     private int topSpeed = 250; // 250 kmph
+    private static boolean toggleAutopilot = false;
 
     public void accelerate() {
         // accelerate jc
@@ -18,16 +23,6 @@ public class JavaCarMotion implements GenericCarMotion {
         } else {
             currentSpeed = topSpeed;
         }
-        // System.out.println("Speed: " + currentSpeed);
-        // try {
-        //     Thread.sleep(125);
-        // } catch (InterruptedException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
-        // System.out.println(new String(new char[50]).replace("\0", "\r\n"));
-        // System.out.flush();
-
     }
 	public void decelerate() {
         currentState = "--";
@@ -48,6 +43,10 @@ public class JavaCarMotion implements GenericCarMotion {
             currentSpeed = 0;
         }
     }
+
+    public void distanceUpdate() {
+        currentDistance += (currentSpeed * 0.0002777778);
+    }
     
     public int getCurrentSpeed() {
         return currentSpeed;
@@ -57,5 +56,25 @@ public class JavaCarMotion implements GenericCarMotion {
         return currentState;
     }
 
+    public void toggleAutopilot() {
+        if (toggleAutopilot) {
+            toggleAutopilot = false;
+        } else {
+            toggleAutopilot = true;
+        }
+    }
+
+    public String getAutopilotState() {
+        if (toggleAutopilot) {
+            return "ON";
+        } else {
+            return "OFF";
+        }
+    }
+
+    public double getCurrentDistance() {
+        return BigDecimal.valueOf(currentDistance).setScale(1, RoundingMode.DOWN).doubleValue();
+        // return currentDistance;
+    }
 
 }

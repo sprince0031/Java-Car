@@ -10,9 +10,12 @@ public class JavaCar {
         
         Thread conDispThread = new Thread(new ConsoleDisplay());
         conDispThread.setDaemon(true);
+        Thread distTracker = new Thread(new DistanceTracker());
+        distTracker.setDaemon(true);
         Thread controlsThread = new Thread(new Controls());
 
         conDispThread.start();
+        distTracker.start();
         controlsThread.start();
 
     }

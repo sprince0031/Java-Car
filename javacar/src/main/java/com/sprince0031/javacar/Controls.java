@@ -12,6 +12,7 @@ public class Controls implements Runnable, NativeKeyListener {
 
     JavaCarMotion jcMotion = new JavaCarMotion();
     Thread decelerateDaemon = new Thread(new DecelerateDaemon());
+    // private boolean shift = false, a = false;
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent pressEvent) {
@@ -32,6 +33,20 @@ public class Controls implements Runnable, NativeKeyListener {
             jcMotion.brake();
         }
         
+        // if (pressEvent.getKeyCode() == NativeKeyEvent.VC_SHIFT) {
+        //     shift = true;
+        //     if (a) {
+        //         jcMotion.toggleAutopilot();
+        //     }
+        // }
+
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_A) {
+            // a = true;
+            // if (shift) {
+                jcMotion.toggleAutopilot();
+            // }
+        }
+
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
             try {
                 GlobalScreen.unregisterNativeHook();
@@ -44,15 +59,13 @@ public class Controls implements Runnable, NativeKeyListener {
 
     @Override
     public void nativeKeyReleased(NativeKeyEvent releaseEvent) {
-        if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_UP) {
-            // Thread decelerateDaemon = new Thread(new DecelerateDaemon());
-            // decelerateDaemon.setDaemon(true);
-            // decelerateDaemon.start();
-            // synchronized (decelerateDaemon) {
-            //     decelerateDaemon.notify();
-            // }
-            
-        }
+        // if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_A) {
+        //     a = false;          
+        // }
+
+        // if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_SHIFT) {
+        //     shift = false;          
+        // }
     }
 
     @Override
