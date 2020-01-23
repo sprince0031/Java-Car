@@ -9,14 +9,14 @@ public class DecelerateDaemon implements Runnable {
     public void run() {
         while (true) {
             jcMotion.decelerate();
-            System.out.println("Speed: " + jcMotion.getCurrentSpeed());
+            // System.out.println("Speed: " + jcMotion.getCurrentSpeed());
             try {
                 Thread.sleep(125);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            System.out.println(new String(new char[50]).replace("\0", "\r\n"));
+            // System.out.println(new String(new char[50]).replace("\0", "\r\n"));
             
         }
         // try {

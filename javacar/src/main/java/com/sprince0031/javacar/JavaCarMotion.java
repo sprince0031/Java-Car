@@ -2,6 +2,7 @@ package com.sprince0031.javacar;
 
 public class JavaCarMotion implements GenericCarMotion {
     private static volatile int currentSpeed = 0;
+    private static volatile String currentState = "--";
     private double accelerationRate = 9.25; // m/s^2
     private double naturalDecelerationRate = 6.25;
     private double brakingDecelerationRate = 12.25;
@@ -9,10 +10,10 @@ public class JavaCarMotion implements GenericCarMotion {
 
     public void accelerate() {
         // accelerate jc
-
+        currentState = "Accelerating";
         if (currentSpeed < topSpeed) {
             currentSpeed = (int) (currentSpeed + ((accelerationRate * 125) / 1000));
-            System.out.println("Speed: " + this.getCurrentSpeed() + "\tAccelerating!");
+            // System.out.println("Speed: " + this.getCurrentSpeed() + "\tAccelerating!");
             
         } else {
             currentSpeed = topSpeed;
@@ -29,6 +30,7 @@ public class JavaCarMotion implements GenericCarMotion {
 
     }
 	public void decelerate() {
+        currentState = "--";
         if (currentSpeed > 0) {
             currentSpeed = (int)(currentSpeed - ((naturalDecelerationRate * 125)/1000));
         } else {
@@ -37,9 +39,10 @@ public class JavaCarMotion implements GenericCarMotion {
     }
 
     public void brake() {
+        currentState = "Braking";
         if (currentSpeed > 0) {
             currentSpeed = (int)(currentSpeed - ((brakingDecelerationRate * 125)/1000));
-            System.out.println("Speed: " + this.getCurrentSpeed() + "\tBraking!");
+            // System.out.println("Speed: " + this.getCurrentSpeed() + "\tBraking!");
 
         } else {
             currentSpeed = 0;
@@ -48,6 +51,10 @@ public class JavaCarMotion implements GenericCarMotion {
     
     public int getCurrentSpeed() {
         return currentSpeed;
+    }
+
+    public String getCurrentState() {
+        return currentState;
     }
 
 

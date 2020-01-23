@@ -1,7 +1,10 @@
 package com.sprince0031.javacar;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class JavaCarEVFunctions implements EV {
-    private double chargeLevel = 100.0;
+    private double chargeLevel = 20.1;
     private double remainingEnergy;
     private double avgRangePerkWh = 6.25;
     private double maxEnergyCapacity = 95.0; // 95 kWh of battery capacity.
@@ -27,6 +30,6 @@ public class JavaCarEVFunctions implements EV {
     public double calculateRange() {
         remainingEnergy = calculateRemainingEnergy();
         availableRange = avgRangePerkWh * remainingEnergy;
-        return availableRange;
+        return BigDecimal.valueOf(availableRange).setScale(1, RoundingMode.DOWN).doubleValue();
     }
 }
