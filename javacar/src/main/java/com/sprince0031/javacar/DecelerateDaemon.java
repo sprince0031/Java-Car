@@ -8,6 +8,7 @@ public class DecelerateDaemon implements Runnable {
     @Override
     public void run() {
         while (true) {
+            JavaCar.setCurrentState("--");
             jcMotion.decelerate();
             // System.out.println("Speed: " + jcMotion.getCurrentSpeed());
             try {

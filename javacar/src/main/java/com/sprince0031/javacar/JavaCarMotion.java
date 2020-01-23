@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 
 public class JavaCarMotion implements GenericCarMotion {
     private static volatile int currentSpeed = 0;
-    private static volatile String currentState = "--";
     private static volatile double currentDistance = 0.0;
     private double accelerationRate = 9.25; // m/s^2
     private double naturalDecelerationRate = 6.25;
@@ -15,7 +14,7 @@ public class JavaCarMotion implements GenericCarMotion {
 
     public void accelerate() {
         // accelerate jc
-        currentState = "Accelerating";
+        // currentState = "Accelerating";
         if (currentSpeed < topSpeed) {
             currentSpeed = (int) (currentSpeed + ((accelerationRate * 125) / 1000));
             // System.out.println("Speed: " + this.getCurrentSpeed() + "\tAccelerating!");
@@ -25,7 +24,7 @@ public class JavaCarMotion implements GenericCarMotion {
         }
     }
 	public void decelerate() {
-        currentState = "--";
+        // currentState = "--";
         if (currentSpeed > 0) {
             currentSpeed = (int)(currentSpeed - ((naturalDecelerationRate * 125)/1000));
         } else {
@@ -34,7 +33,7 @@ public class JavaCarMotion implements GenericCarMotion {
     }
 
     public void brake() {
-        currentState = "Braking";
+        // currentState = "Braking";
         if (currentSpeed > 0) {
             currentSpeed = (int)(currentSpeed - ((brakingDecelerationRate * 125)/1000));
             // System.out.println("Speed: " + this.getCurrentSpeed() + "\tBraking!");
@@ -50,10 +49,6 @@ public class JavaCarMotion implements GenericCarMotion {
     
     public int getCurrentSpeed() {
         return currentSpeed;
-    }
-
-    public String getCurrentState() {
-        return currentState;
     }
 
     public void toggleAutopilot() {

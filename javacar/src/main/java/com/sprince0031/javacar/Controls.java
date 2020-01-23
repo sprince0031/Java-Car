@@ -11,6 +11,7 @@ import org.jnativehook.keyboard.NativeKeyListener;
 public class Controls implements Runnable, NativeKeyListener {
 
     JavaCarMotion jcMotion = new JavaCarMotion();
+    JavaCarEVFunctions jcEVFunc = new JavaCarEVFunctions();
     Thread decelerateDaemon = new Thread(new DecelerateDaemon());
     // private boolean shift = false, a = false;
 
@@ -26,10 +27,16 @@ public class Controls implements Runnable, NativeKeyListener {
             //         e.printStackTrace();
             //     }
             // }
-            jcMotion.accelerate();            
+            if (jcEVFunc.getChargeLevel() > 0.0) {
+                JavaCar.setCurrentState("Accelerating");
+                jcMotion.accelerate();            
+            } else {
+                // TODO: Display charge warning message.
+            }
         }
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_DOWN || pressEvent.getKeyCode() == NativeKeyEvent.VC_S) {
+            JavaCar.setCurrentState("Braking");
             jcMotion.brake();
         }
         

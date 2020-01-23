@@ -1,13 +1,15 @@
 package com.sprince0031.javacar;
 
-public class DistanceTracker implements Runnable {
+public class DistanceAndChargeTracker implements Runnable {
 
     JavaCarMotion jcMotion = new JavaCarMotion();
+    JavaCarEVFunctions jcEVFunc = new JavaCarEVFunctions();
 
     @Override
     public void run() {
         while (true) {
             jcMotion.distanceUpdate();
+            jcEVFunc.chargeLevelUpdate(jcMotion.getCurrentDistance());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

@@ -6,16 +6,26 @@ import java.io.InputStreamReader;
 
 public class JavaCar {
 
+    private static volatile String currentState = "--";
+
+    public static String getCurrentState() {
+        return currentState;
+    }
+
+    public static void setCurrentState(String newState) {
+        currentState = newState;
+    }
+
     void run() {
         
         Thread conDispThread = new Thread(new ConsoleDisplay());
         conDispThread.setDaemon(true);
-        Thread distTracker = new Thread(new DistanceTracker());
-        distTracker.setDaemon(true);
+        Thread distAndChargeTracker = new Thread(new DistanceAndChargeTracker());
+        distAndChargeTracker.setDaemon(true);
         Thread controlsThread = new Thread(new Controls());
 
         conDispThread.start();
-        distTracker.start();
+        distAndChargeTracker.start();
         controlsThread.start();
 
     }
