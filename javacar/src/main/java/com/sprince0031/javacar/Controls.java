@@ -11,27 +11,39 @@ import org.jnativehook.keyboard.NativeKeyListener;
 public class Controls implements Runnable, NativeKeyListener {
 
     JavaCarMotion jcMotion = new JavaCarMotion();
-    Thread decelerateDaemon = new Thread(new DecelerateDaemon());
+    JavaCarEVFunctions jcEVFunc = new JavaCarEVFunctions();
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent pressEvent) {
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_UP || pressEvent.getKeyCode() == NativeKeyEvent.VC_W) {
-            // synchronized (decelerateDaemon) {
-            //     try {
-            //         decelerateDaemon.wait();
-            //     } catch (InterruptedException e) {
-            //         // TODO Auto-generated catch block
-            //         e.printStackTrace();
-            //     }
-            // }
-            jcMotion.accelerate();            
+            if (jcEVFunc.getChargeLevel() > 0.0 ) {
+                JavaCar.setCurrentState("Accelerating");
+                jcMotion.accelerate();            
+            } 
         }
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_DOWN || pressEvent.getKeyCode() == NativeKeyEvent.VC_S) {
+            JavaCar.setCurrentState("Braking");
             jcMotion.brake();
         }
-        
+
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_A) {
+            jcMotion.toggleAutopilot();
+        }
+
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_C) {
+            if (JavaCarMotion.getCurrentSpeed() == 0) {
+                if (JavaCar.getCurrentState().equals("Charging")) {
+                    JavaCar.setCurrentState("Parking");
+                } else {
+                    JavaCar.setCurrentState("Charging");
+                }
+            } else {
+                ConsoleDisplay.toggleChargeErrorFlag();
+            }
+        }
+
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
             try {
                 GlobalScreen.unregisterNativeHook();
@@ -45,14 +57,13 @@ public class Controls implements Runnable, NativeKeyListener {
     @Override
     public void nativeKeyReleased(NativeKeyEvent releaseEvent) {
         if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_UP) {
-            // Thread decelerateDaemon = new Thread(new DecelerateDaemon());
-            // decelerateDaemon.setDaemon(true);
-            // decelerateDaemon.start();
-            // synchronized (decelerateDaemon) {
-            //     decelerateDaemon.notify();
-            // }
-            
+            JavaCar.setCurrentState("--");         
         }
+
+        if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_DOWN && JavaCarMotion.getCurrentSpeed() > 0) {
+            JavaCar.setCurrentState("--");         
+        }
+
     }
 
     @Override
@@ -74,8 +85,6 @@ public class Controls implements Runnable, NativeKeyListener {
             System.err.println("There was a problem registering the native hook.");
 			System.err.println(e.getMessage());
         }
-        decelerateDaemon.setDaemon(true);
-        decelerateDaemon.start();
 
         GlobalScreen.addNativeKeyListener(new Controls());
     }

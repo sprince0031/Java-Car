@@ -4,31 +4,45 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class JavaCarEVFunctions implements EV {
-    private double chargeLevel = 20.1;
-    private double remainingEnergy;
+    private static double chargeLevel;
+    private static double remainingEnergy = 80.0;
     private double avgRangePerkWh = 6.25;
     private double maxEnergyCapacity = 95.0; // 95 kWh of battery capacity.
     // private double maxCharge = 95.0 / 400; // 400 volts
-    // private double maxRange = 500.0; // 500 km of max range for P100D
-    private double availableRange;
+    private double maxRange = avgRangePerkWh * maxEnergyCapacity; // 500+ km of max range for P100D
+    private static double availableRange;
+    // private static boolean canRun = true;
 
     @Override
     public void chargeCar() {
-        // charge jc
+
+        if (remainingEnergy < maxEnergyCapacity) {
+            remainingEnergy += 0.01;
+        } else {
+            JavaCar.setCurrentState("Parking");
+        }
     }
 
     @Override
     public double getChargeLevel() {
-        return chargeLevel;
+        return BigDecimal.valueOf(chargeLevel).setScale(1, RoundingMode.DOWN).doubleValue();
     }
 
-    double calculateRemainingEnergy() {
-        return maxEnergyCapacity * (chargeLevel/100);
+    public void chargeLevelUpdate() {
+        chargeLevel = (remainingEnergy/maxEnergyCapacity) * 100;
+    }
+
+    public void calculateRemainingEnergy(double acceleratedDistance) {
+        if (JavaCar.getCurrentState().equals("Accelerating")) {
+            remainingEnergy -= (acceleratedDistance % maxRange) / (avgRangePerkWh * 36);    
+            chargeLevelUpdate();
+        }
+
     }
 
     @Override
     public double calculateRange() {
-        remainingEnergy = calculateRemainingEnergy();
+
         availableRange = avgRangePerkWh * remainingEnergy;
         return BigDecimal.valueOf(availableRange).setScale(1, RoundingMode.DOWN).doubleValue();
     }
