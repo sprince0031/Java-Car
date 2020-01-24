@@ -7,7 +7,6 @@ public class ConsoleDisplay implements Runnable {
     private static boolean chargingErrorFlag = false;
     private int messageDisplayCounter = 0;
     private int chargeBarAnimationCounter = 1, i;
-    private int threadSleepTime = 150;
 
     public static void toggleChargeErrorFlag() {
         if (chargingErrorFlag) {
@@ -20,12 +19,15 @@ public class ConsoleDisplay implements Runnable {
     @Override
     public void run() {
         while (true) {
+            if (JavaCarMotion.getCurrentSpeed() >= 200) {
+                System.out.println("\t\t\t\t\t========== Going too fast! Please slow down! ==========");
+            }
             if (jcEVFunc.getChargeLevel() <= 20.0 && !(JavaCar.getCurrentState().equals("Charging"))) {
                 System.out.println("\t\t\t\t\tBattery level is low! Consider charging by pressing 'C' when the car is parked.");
             } else if (chargingErrorFlag) {
                 System.out.println("\t\t\t\t\t\t\t\tSorry! Can't charge while car in motion.");
                 messageDisplayCounter++;
-                if (messageDisplayCounter > 200) {
+                if (messageDisplayCounter > 20) {
                     chargingErrorFlag = false;
                     messageDisplayCounter = 0;
                 }
@@ -36,12 +38,12 @@ public class ConsoleDisplay implements Runnable {
             System.out.println("Charge level: " + jcEVFunc.getChargeLevel() + " %" + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   Estimated range: " + jcEVFunc.calculateRange() + " km");
 
             if (JavaCar.getCurrentState().equals("Charging")) {
-                threadSleepTime = 1000;
-                if (chargeBarAnimationCounter < 9) {
+
+                if (chargeBarAnimationCounter < 12) {
                     for (i = (11-chargeBarAnimationCounter); i > 0; i--) {
                         System.out.print("\t");
                     }
-                    // System.out.print("HA");
+
                     for (i = 1; i < chargeBarAnimationCounter; i++) {
                         System.out.print("    ");
                     }
@@ -55,12 +57,10 @@ public class ConsoleDisplay implements Runnable {
                 } else {
                     chargeBarAnimationCounter = 1;
                 }
-            } else {
-                threadSleepTime = 150;
-            }
+             }
 
             try {
-                Thread.sleep(threadSleepTime);
+                Thread.sleep(150);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

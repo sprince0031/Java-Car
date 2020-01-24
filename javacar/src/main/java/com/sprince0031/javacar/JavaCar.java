@@ -22,10 +22,13 @@ public class JavaCar {
         conDispThread.setDaemon(true);
         Thread distAndChargeTracker = new Thread(new DistanceAndChargeTracker());
         distAndChargeTracker.setDaemon(true);
+        Thread decelerateDaemon = new Thread(new DecelerateDaemon());
+        decelerateDaemon.setDaemon(true);
         Thread controlsThread = new Thread(new Controls());
 
         conDispThread.start();
         distAndChargeTracker.start();
+        decelerateDaemon.start();
         controlsThread.start();
 
     }
@@ -33,7 +36,7 @@ public class JavaCar {
     public static void main(String[] args) throws IOException {
 
         String username, key;
-        // int action;
+
         JavaCarFunctions jcFuntions = new JavaCarFunctions();
         do {
             System.out.println("Hello World! Please provide credentials to unlock JavaCar.");
@@ -50,6 +53,7 @@ public class JavaCar {
             new JavaCar().run();
         } catch (Exception e) {
             // TODO: handle exception
+            e.printStackTrace();
         }
         
 

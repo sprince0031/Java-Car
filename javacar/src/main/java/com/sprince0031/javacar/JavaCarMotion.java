@@ -15,48 +15,36 @@ public class JavaCarMotion implements GenericCarMotion {
     private static boolean toggleAutopilot = false;
 
     public void accelerate() {
-        // accelerate jc
-        // currentState = "Accelerating";
         if (currentSpeed < topSpeed) {
-            currentSpeed = (int) (currentSpeed + ((accelerationRate * 125) / 1000));
-            // System.out.println("Speed: " + this.getCurrentSpeed() + "\tAccelerating!");
-            
+            currentSpeed = (int) (currentSpeed + ((accelerationRate * 125) / 1000));            
         } else {
             currentSpeed = topSpeed;
         }
     }
 	public void decelerate() {
-        // currentState = "--";
-        while (JavaCar.getCurrentState().equals("--")) {
+
             if (currentSpeed > 0) {
                 currentSpeed = (int)(currentSpeed - ((naturalDecelerationRate * 125)/1000));
             } else {
                 currentSpeed = 0;
             }
-            JavaCar.setCurrentState("NIL");
+
             try {
-                Thread.sleep(50);
+                Thread.sleep(125);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
     public void brake() {
-        // currentState = "Braking";
+
         if (currentSpeed > 0) {
             currentSpeed = (int)(currentSpeed - ((brakingDecelerationRate * 125)/1000));
-            // System.out.println("Speed: " + this.getCurrentSpeed() + "\tBraking!");
-
         } else {
             currentSpeed = 0;
         }
     }
-
-    // public void totalDistanceUpdate() {
-    //     // currentDistance += (currentSpeed * 0.0002777778); // that much km per second
-    //     totalDistance = acceleratedDistance + unacceleratedDistance;
-    // }
 
     public void distanceUpdate() {
         if (JavaCar.getCurrentState().equals("Accelerating")) {
@@ -89,7 +77,6 @@ public class JavaCarMotion implements GenericCarMotion {
     public double getCurrentDistance() {
         totalDistance = acceleratedDistance + unacceleratedDistance;
         return BigDecimal.valueOf(totalDistance).setScale(1, RoundingMode.DOWN).doubleValue();
-        // return currentDistance;
     }
 
     public double getAcceleratedDistance() {

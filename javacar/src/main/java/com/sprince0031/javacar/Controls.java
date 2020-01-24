@@ -12,46 +12,24 @@ public class Controls implements Runnable, NativeKeyListener {
 
     JavaCarMotion jcMotion = new JavaCarMotion();
     JavaCarEVFunctions jcEVFunc = new JavaCarEVFunctions();
-    // Thread decelerateDaemon = new Thread(new DecelerateDaemon());
-    // private boolean shift = false, a = false;
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent pressEvent) {
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_UP || pressEvent.getKeyCode() == NativeKeyEvent.VC_W) {
-            // synchronized (decelerateDaemon) {
-            //     try {
-            //         decelerateDaemon.wait();
-            //     } catch (InterruptedException e) {
-            //         // TODO Auto-generated catch block
-            //         e.printStackTrace();
-            //     }
-            // }
             if (jcEVFunc.getChargeLevel() > 0.0 ) {
                 JavaCar.setCurrentState("Accelerating");
                 jcMotion.accelerate();            
-            } else {
-                // TODO: Display charge warning message.
-            }
+            } 
         }
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_DOWN || pressEvent.getKeyCode() == NativeKeyEvent.VC_S) {
             JavaCar.setCurrentState("Braking");
             jcMotion.brake();
         }
-        
-        // if (pressEvent.getKeyCode() == NativeKeyEvent.VC_SHIFT) {
-        //     shift = true;
-        //     if (a) {
-        //         jcMotion.toggleAutopilot();
-        //     }
-        // }
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_A) {
-            // a = true;
-            // if (shift) {
             jcMotion.toggleAutopilot();
-            // }
         }
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_C) {
@@ -79,13 +57,13 @@ public class Controls implements Runnable, NativeKeyListener {
     @Override
     public void nativeKeyReleased(NativeKeyEvent releaseEvent) {
         if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_UP) {
-            JavaCar.setCurrentState("--");
-            jcMotion.decelerate();          
+            JavaCar.setCurrentState("--");         
         }
 
-        // if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_SHIFT) {
-        //     shift = false;          
-        // }
+        if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_DOWN && JavaCarMotion.getCurrentSpeed() > 0) {
+            JavaCar.setCurrentState("--");         
+        }
+
     }
 
     @Override
@@ -107,8 +85,6 @@ public class Controls implements Runnable, NativeKeyListener {
             System.err.println("There was a problem registering the native hook.");
 			System.err.println(e.getMessage());
         }
-        // decelerateDaemon.setDaemon(true);
-        // decelerateDaemon.start();
 
         GlobalScreen.addNativeKeyListener(new Controls());
     }

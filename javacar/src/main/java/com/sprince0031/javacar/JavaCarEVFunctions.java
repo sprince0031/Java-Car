@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 
 public class JavaCarEVFunctions implements EV {
     private static double chargeLevel;
-    private static double remainingEnergy = 0.95;
+    private static double remainingEnergy = 80.0;
     private double avgRangePerkWh = 6.25;
     private double maxEnergyCapacity = 95.0; // 95 kWh of battery capacity.
     // private double maxCharge = 95.0 / 400; // 400 volts
@@ -15,10 +15,12 @@ public class JavaCarEVFunctions implements EV {
 
     @Override
     public void chargeCar() {
-        // charge jc
-        // if (JavaCarMotion.getCurrentSpeed() == 0) {
 
-        // }
+        if (remainingEnergy < maxEnergyCapacity) {
+            remainingEnergy += 0.01;
+        } else {
+            JavaCar.setCurrentState("Parking");
+        }
     }
 
     @Override
@@ -32,15 +34,15 @@ public class JavaCarEVFunctions implements EV {
 
     public void calculateRemainingEnergy(double acceleratedDistance) {
         if (JavaCar.getCurrentState().equals("Accelerating")) {
-            remainingEnergy -= BigDecimal.valueOf((acceleratedDistance % maxRange) / (avgRangePerkWh * 36)).setScale(1, RoundingMode.DOWN).doubleValue();         
+            remainingEnergy -= (acceleratedDistance % maxRange) / (avgRangePerkWh * 36);    
             chargeLevelUpdate();
         }
-        // return remainingEnergy;
+
     }
 
     @Override
     public double calculateRange() {
-        // calculateRemainingEnergy();
+
         availableRange = avgRangePerkWh * remainingEnergy;
         return BigDecimal.valueOf(availableRange).setScale(1, RoundingMode.DOWN).doubleValue();
     }
