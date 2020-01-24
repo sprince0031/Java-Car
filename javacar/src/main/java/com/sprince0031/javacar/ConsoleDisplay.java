@@ -4,18 +4,63 @@ public class ConsoleDisplay implements Runnable {
 
     JavaCarEVFunctions jcEVFunc = new JavaCarEVFunctions();
     JavaCarMotion jcMotion = new JavaCarMotion();
+    private static boolean chargingErrorFlag = false;
+    private int messageDisplayCounter = 0;
+    private int chargeBarAnimationCounter = 1, i;
+    private int threadSleepTime = 150;
+
+    public static void toggleChargeErrorFlag() {
+        if (chargingErrorFlag) {
+            chargingErrorFlag = false;
+        } else {
+            chargingErrorFlag = true;
+        }
+    }
 
     @Override
     public void run() {
         while (true) {
-            if (jcEVFunc.getChargeLevel() <= 20.0) {
-                System.out.println("\t\t\t\t\t\t\t\tBattery level is low! Consider charging.");
+            if (jcEVFunc.getChargeLevel() <= 20.0 && !(JavaCar.getCurrentState().equals("Charging"))) {
+                System.out.println("\t\t\t\t\tBattery level is low! Consider charging by pressing 'C' when the car is parked.");
+            } else if (chargingErrorFlag) {
+                System.out.println("\t\t\t\t\t\t\t\tSorry! Can't charge while car in motion.");
+                messageDisplayCounter++;
+                if (messageDisplayCounter > 200) {
+                    chargingErrorFlag = false;
+                    messageDisplayCounter = 0;
+                }
             }
-            System.out.println("Speed: " + jcMotion.getCurrentSpeed() + " kmph" + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   State: " + JavaCar.getCurrentState() + "\n");
+
+            System.out.println("Speed: " + JavaCarMotion.getCurrentSpeed() + " kmph" + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   State: " + JavaCar.getCurrentState() + "\n");
             System.out.println("Autopilot: " + jcMotion.getAutopilotState() + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t           Distance travelled: " + jcMotion.getCurrentDistance() + " km" + "\n");
             System.out.println("Charge level: " + jcEVFunc.getChargeLevel() + " %" + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   Estimated range: " + jcEVFunc.calculateRange() + " km");
+
+            if (JavaCar.getCurrentState().equals("Charging")) {
+                threadSleepTime = 1000;
+                if (chargeBarAnimationCounter < 9) {
+                    for (i = (11-chargeBarAnimationCounter); i > 0; i--) {
+                        System.out.print("\t");
+                    }
+                    // System.out.print("HA");
+                    for (i = 1; i < chargeBarAnimationCounter; i++) {
+                        System.out.print("    ");
+                    }
+                    for (i = 0; i < chargeBarAnimationCounter; i++) {
+                        System.out.print("\\\\\\\\");
+                    }
+                    for (i = 0; i < chargeBarAnimationCounter; i++) {
+                        System.out.print("////");
+                    }
+                    chargeBarAnimationCounter++;
+                } else {
+                    chargeBarAnimationCounter = 1;
+                }
+            } else {
+                threadSleepTime = 150;
+            }
+
             try {
-                Thread.sleep(100);
+                Thread.sleep(threadSleepTime);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

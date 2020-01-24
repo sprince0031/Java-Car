@@ -5,7 +5,9 @@ import java.math.RoundingMode;
 
 public class JavaCarMotion implements GenericCarMotion {
     private static volatile int currentSpeed = 0;
-    private static volatile double currentDistance = 0.0;
+    private static volatile double unacceleratedDistance = 0.0;
+    private static volatile double acceleratedDistance = 0.0;
+    private static volatile double totalDistance = 0.0;
     private double accelerationRate = 9.25; // m/s^2
     private double naturalDecelerationRate = 6.25;
     private double brakingDecelerationRate = 12.25;
@@ -25,10 +27,18 @@ public class JavaCarMotion implements GenericCarMotion {
     }
 	public void decelerate() {
         // currentState = "--";
-        if (currentSpeed > 0) {
-            currentSpeed = (int)(currentSpeed - ((naturalDecelerationRate * 125)/1000));
-        } else {
-            currentSpeed = 0;
+        while (JavaCar.getCurrentState().equals("--")) {
+            if (currentSpeed > 0) {
+                currentSpeed = (int)(currentSpeed - ((naturalDecelerationRate * 125)/1000));
+            } else {
+                currentSpeed = 0;
+            }
+            JavaCar.setCurrentState("NIL");
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -43,11 +53,20 @@ public class JavaCarMotion implements GenericCarMotion {
         }
     }
 
+    // public void totalDistanceUpdate() {
+    //     // currentDistance += (currentSpeed * 0.0002777778); // that much km per second
+    //     totalDistance = acceleratedDistance + unacceleratedDistance;
+    // }
+
     public void distanceUpdate() {
-        currentDistance += (currentSpeed * 0.0002777778);
+        if (JavaCar.getCurrentState().equals("Accelerating")) {
+            acceleratedDistance += (currentSpeed * 0.0002777778); // that much km per second
+        } else {
+            unacceleratedDistance += (currentSpeed * 0.0002777778);
+        }
     }
     
-    public int getCurrentSpeed() {
+    public static int getCurrentSpeed() {
         return currentSpeed;
     }
 
@@ -68,8 +87,13 @@ public class JavaCarMotion implements GenericCarMotion {
     }
 
     public double getCurrentDistance() {
-        return BigDecimal.valueOf(currentDistance).setScale(1, RoundingMode.DOWN).doubleValue();
+        totalDistance = acceleratedDistance + unacceleratedDistance;
+        return BigDecimal.valueOf(totalDistance).setScale(1, RoundingMode.DOWN).doubleValue();
         // return currentDistance;
+    }
+
+    public double getAcceleratedDistance() {
+        return BigDecimal.valueOf(acceleratedDistance).setScale(1, RoundingMode.DOWN).doubleValue();
     }
 
 }

@@ -9,7 +9,8 @@ public class DistanceAndChargeTracker implements Runnable {
     public void run() {
         while (true) {
             jcMotion.distanceUpdate();
-            jcEVFunc.chargeLevelUpdate(jcMotion.getCurrentDistance());
+            jcEVFunc.chargeLevelUpdate();
+            jcEVFunc.calculateRemainingEnergy(jcMotion.getAcceleratedDistance());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
