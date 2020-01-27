@@ -20,11 +20,16 @@ public class ConsoleDisplay implements Runnable {
     public void run() {
         while (true) {
             if (JavaCarMotion.getCurrentSpeed() >= 200) {
-                System.out.println("\t\t\t\t\t========== Going too fast! Please slow down! ==========");
+                System.out.println("\t\t\t\t\t\t\t========== Going too fast! Please slow down! ==========");
             }
-            if (jcEVFunc.getChargeLevel() <= 20.0 && !(JavaCar.getCurrentState().equals("Charging"))) {
-                System.out.println("\t\t\t\t\tBattery level is low! Consider charging by pressing 'C' when the car is parked.");
-            } else if (chargingErrorFlag) {
+            if (jcEVFunc.getChargeLevel() <= 20.0 && jcEVFunc.getChargeLevel() > 10.0 && !(JavaCar.getCurrentState().equals("Charging"))) {
+                System.out.println("\t\t\t\t\t\tBattery level is low! Consider charging by pressing 'C' when the car is parked.");
+            } else if (jcEVFunc.getChargeLevel() <= 10.0 && jcEVFunc.getChargeLevel() > 0.0 && !(JavaCar.getCurrentState().equals("Charging"))) {
+                System.out.println("\t\t\t\t\t\tBattery level critical! Please charge ASAP by pressing 'C' when the car is parked.");
+            } else if (jcEVFunc.getChargeLevel() == 0.0 && !(JavaCar.getCurrentState().equals("Charging"))) {
+                System.out.println("\t\t\t\t\t\t\t\t\tBattery empty! Please charge.");
+            }
+            if (chargingErrorFlag) {
                 System.out.println("\t\t\t\t\t\t\t\tSorry! Can't charge while car in motion.");
                 messageDisplayCounter++;
                 if (messageDisplayCounter > 20) {
@@ -60,7 +65,7 @@ public class ConsoleDisplay implements Runnable {
              }
 
             try {
-                Thread.sleep(150);
+                Thread.sleep(125);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

@@ -10,7 +10,7 @@ public class JavaCarMotion implements GenericCarMotion {
     private static volatile double totalDistance = 0.0;
     private double accelerationRate = 9.25; // m/s^2
     private double naturalDecelerationRate = 6.25;
-    private double brakingDecelerationRate = 12.25;
+    private double brakingDecelerationRate = 18.75;
     private int topSpeed = 250; // 250 kmph
     private static boolean toggleAutopilot = false;
 
@@ -61,8 +61,10 @@ public class JavaCarMotion implements GenericCarMotion {
     public void toggleAutopilot() {
         if (toggleAutopilot) {
             toggleAutopilot = false;
+            JavaCar.setCurrentState("--");
         } else {
             toggleAutopilot = true;
+            JavaCar.setCurrentState("Autopilot");
         }
     }
 

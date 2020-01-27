@@ -4,5 +4,5 @@ public interface EV {
     public void chargeCar();
     public double calculateRange();
     public double getChargeLevel();
-    // public void dischargeCar();
+    public void calculateRemainingEnergy(double acceleratedDistance);
 }

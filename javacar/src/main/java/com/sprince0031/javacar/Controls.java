@@ -16,16 +16,36 @@ public class Controls implements Runnable, NativeKeyListener {
     @Override
     public void nativeKeyPressed(NativeKeyEvent pressEvent) {
 
-        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_UP || pressEvent.getKeyCode() == NativeKeyEvent.VC_W) {
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_UP) {
             if (jcEVFunc.getChargeLevel() > 0.0 ) {
+                if (JavaCar.getCurrentState().equals("Autopilot")) {
+                    jcMotion.toggleAutopilot();
+                }
                 JavaCar.setCurrentState("Accelerating");
                 jcMotion.accelerate();            
             } 
         }
 
-        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_DOWN || pressEvent.getKeyCode() == NativeKeyEvent.VC_S) {
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_DOWN) {
+            if (JavaCar.getCurrentState().equals("Autopilot")) {
+                jcMotion.toggleAutopilot();
+            }
             JavaCar.setCurrentState("Braking");
             jcMotion.brake();
+        }
+
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_W) {
+            if (jcEVFunc.getChargeLevel() > 0.0 && JavaCar.getCurrentState().equals("Autopilot")) {
+                // JavaCar.setCurrentState("Autopilot");
+                jcMotion.accelerate();
+            }
+        }
+
+        if (pressEvent.getKeyCode() == NativeKeyEvent.VC_S) {
+            // JavaCar.setCurrentState("Autopilot");
+            if (JavaCar.getCurrentState().equals("Autopilot")) {
+                jcMotion.decelerate();
+            }
         }
 
         if (pressEvent.getKeyCode() == NativeKeyEvent.VC_A) {
@@ -57,11 +77,15 @@ public class Controls implements Runnable, NativeKeyListener {
     @Override
     public void nativeKeyReleased(NativeKeyEvent releaseEvent) {
         if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_UP) {
-            JavaCar.setCurrentState("--");         
+            if (!(JavaCar.getCurrentState().equals("Autopilot"))) {
+                JavaCar.setCurrentState("--");
+            }
         }
 
         if (releaseEvent.getKeyCode() == NativeKeyEvent.VC_DOWN && JavaCarMotion.getCurrentSpeed() > 0) {
-            JavaCar.setCurrentState("--");         
+            if (!(JavaCar.getCurrentState().equals("Autopilot"))) {
+                JavaCar.setCurrentState("--");
+            }
         }
 
     }
